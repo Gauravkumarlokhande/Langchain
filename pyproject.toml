@@ -10,6 +10,7 @@ python = "^3.12"
 langchain = {extras = ["google-vertexai"], version = "^0.3.22"}
 langchain-groq = "^0.3.2"
 dotenv = "^0.9.9"
+langchain-community = "^0.3.21"
 
 
 [build-system]
