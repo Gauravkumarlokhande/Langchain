@@ -13,4 +13,4 @@ async def main():
 
 asyncio.run(main())
 
-# this can read pdf files only and not images in pdf or scanned pdf files
+# this can read pdf files only and not images in pdf or scanned pdf files 
