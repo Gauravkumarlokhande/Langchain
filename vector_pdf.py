@@ -1,7 +1,18 @@
 # loading web pages
-
+from langchain_huggingface import HuggingFaceEmbeddings
 import bs4
 from langchain_community.document_loaders import WebBaseLoader
+import os
+from langchain_core.vectorstores import InMemoryVectorStore
+from langchain_community.document_loaders import PyPDFLoader
+
+loader = PyPDFLoader("/root/langchain/NIPS-2017-attention-is-all-you-need-Paper.pdf")
+pages = []
+for page in loader.load():
+    pages.append(page)
+# print(pages)
+
+hf_token = os.environ.get("HUGGINGFACEHUB_API_TOKEN")
 
 page_url = "https://python.langchain.com/docs/how_to/chatbots_memory/"
 
@@ -12,11 +23,12 @@ for doc in loader.load():
 
 assert len(docs) == 1
 doc = docs[0]
-print(f"{doc.metadata}\n")
-print(doc.page_content[:500].strip())
-# groq_embeddings = GroqEmbeddings(api_key=os.environ["GROQ_API_KEY"])
+# print(f"{doc.metadata}\n")
+# print(doc.page_content[:500].strip())
 
-# vector_store = InMemoryVectorStore.from_documents(pages, OpenAIEmbeddings())
-# docs = vector_store.similarity_search("What is LayoutParser?", k=2)
-# for doc in docs:
-#     print(f'Page {doc.metadata["page"]}: {doc.page_content[:300]}\n')
+embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-mpnet-base-v2")
+vector_store = InMemoryVectorStore.from_documents(pages, embeddings)
+docs = vector_store.similarity_search("What are Encoder and Decoder Stacks?", k=2)
+for doc in docs:
+    print(f'Page {doc.metadata["page"]}: {doc.page_content[:300]}\n')
+
